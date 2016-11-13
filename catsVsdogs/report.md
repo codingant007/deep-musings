@@ -99,6 +99,8 @@ Ran for 10000 iterations with similar performance as the latter so choose not to
 
 ##Sticking to the simple architechture rather than higher number of layers:
 The simple model with 2 convpool layers and 2 fully connected layers has managed to learn the binary classification well enough to have reached a validation accuracy of **85.6%**. This accuracy would further be increased if training is left to proceed as the training was terminated before the model overfit to the train data. So, the model can be further trained. But the catch here is that, the convergence rate is very low. We can conclude two points from the above observations.
+
 1. Just 2 covpool layers along with 2 fully connected layers are good enough to learn the representations involved in cat vs dog classification. Adding layers might not add any power in this scenario.
-2. In this context achieving better accuracy is more a matter of converging well. So, appliying an upgrade to momemtum upgrade like adadelta or RMSdrop is the way to go.
+
+2. In this context achieving better accuracy is more a matter of converging well. So, applying an upgrade to momemtum upgrade like adadelta or RMSdrop is the way to go.
 
