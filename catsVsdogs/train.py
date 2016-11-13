@@ -144,7 +144,8 @@ def evaluate_cnn(image_shape=[64],
 
 	# the cost we minimize during training is the NLL of the model
 	#cost = layer3.negative_log_likelihood(y) + l1_regularization(regularization_constants[0],params[0]) + l2_regularization(regularization_constants[1],params[0]) 
-	cost = layer3.negative_log_likelihood(y)
+	#cost = layer3.negative_log_likelihood(y)
+	cost = layer3.hinge_cost(y)
 
 	velocity = []
 	for i in range(len(params)):
@@ -402,7 +403,7 @@ def experiment(I=0, J=0, K=0, L=0, M=0, N=0):
 											outputs=2,
 											pools=[f, f],
 											dropouts=e,
-											learning_rate=0.005,
+											learning_rate=0.01,
 											momentum=0.5,
 											n_epochs=2000,
 											minibatch_size=256)

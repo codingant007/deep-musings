@@ -24,11 +24,11 @@ from paramDataManager import ParamDataManager
 
 def evaluate_cnn(image_shape=[64],
 					channels=3,
-					nkerns=[64, 128], 
-					filter_shapes=[5, 5],
+					nkerns=[64, 128 , 200, 500], 
+					filter_shapes=[5, 5, 4, 4],
 					hidden_layer=[1024],
 					outputs=2,
-					pools=[2, 2],
+					pools=[2, 2, 2, 2],
 					dropouts=[0.1, 0.25, 0.5],
 					regularization_constants=[1,1],
 					learning_rate=0.1,
@@ -40,6 +40,7 @@ def evaluate_cnn(image_shape=[64],
 
 	# calculate image shapes at each CNN layer
 	for i in range(len(filter_shapes)):
+		print "image_shape[-1]: ",image_shape[-1],"filter_shapes[i]",filter_shapes[i],"pools[i]",pools[i]
 		if (image_shape[-1] - filter_shapes[i] + 1) % pools[i] != 0 :
 			return -1
 		image_shape = image_shape + [(image_shape[-1] - filter_shapes[i] + 1) // pools[i]]
@@ -99,8 +100,8 @@ def evaluate_cnn(image_shape=[64],
 		poolsize=(pools[0], pools[0]),
 		activation=T.nnet.relu,
 		dropout=dropouts[0],
-		W=paramData[6],
-		b=paramData[7]
+		W=paramData[10],
+		b=paramData[11]
 	)
 
 	# Construct the second convolutional pooling layer
@@ -112,28 +113,28 @@ def evaluate_cnn(image_shape=[64],
 		poolsize=(pools[1], pools[1]),
 		activation=T.nnet.relu,
 		dropout=dropouts[1],
-		W=paramData[4],
-		b=paramData[5]
+		W=paramData[8],
+		b=paramData[9]
 	)
 
 	layer1_2 = ConvPoolLayer(
 		rng,
-		input=layer0.output,
-		image_shape=(minibatch_size, nkerns[0], image_shape[1], image_shape[1]),
-		filter_shape=shapes[1],
-		poolsize=(pools[1], pools[1]),
+		input=layer1.output,
+		image_shape=(minibatch_size, nkerns[1], image_shape[2], image_shape[2]),
+		filter_shape=shapes[2],
+		poolsize=(pools[2], pools[2]),
 		activation=T.nnet.relu,
 		dropout=dropouts[1],
-		W=paramData[4],
-		b=paramData[5]
+		W=paramData[6],
+		b=paramData[7]
 	)
 
 	layer1_3 = ConvPoolLayer(
 		rng,
-		input=layer0.output,
-		image_shape=(minibatch_size, nkerns[0], image_shape[1], image_shape[1]),
-		filter_shape=shapes[1],
-		poolsize=(pools[1], pools[1]),
+		input=layer1_2.output,
+		image_shape=(minibatch_size, nkerns[2], image_shape[1], image_shape[1]),
+		filter_shape=shapes[3],
+		poolsize=(pools[3], pools[3]),
 		activation=T.nnet.relu,
 		dropout=dropouts[1],
 		W=paramData[4],
@@ -166,7 +167,7 @@ def evaluate_cnn(image_shape=[64],
 	)
 
 	# create a list of all model parameters to be fit by gradient descent
-	params = layer3.params + layer2.params + layer1.params + layer0.params
+	params = layer3.params + layer2.params + layer1_3.params + layer1_2.params + layer1.params + layer0.params
 
 	# the cost we minimize during training is the NLL of the model
 	#cost = layer3.negative_log_likelihood(y) + l1_regularization(regularization_constants[0],params[0]) + l2_regularization(regularization_constants[1],params[0]) 
@@ -423,10 +424,10 @@ def experiment(I=0, J=0, K=0, L=0, M=0, N=0):
 							costs[name] = evaluate_cnn(image_shape=[64],
 											channels=3,
 											nkerns=a, 
-											filter_shapes=[b, c],
+											filter_shapes=[b, c ,4, 4],
 											hidden_layer=[d],
 											outputs=2,
-											pools=[f, f],
+											pools=[f, f, f, f],
 											dropouts=e,
 											learning_rate=0.001,
 											momentum=0.5,

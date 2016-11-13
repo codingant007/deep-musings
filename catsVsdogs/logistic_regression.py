@@ -67,7 +67,7 @@ class LogisticRegression(object):
 	def negative_log_likelihood(self, y):
 		return -T.mean(T.log(self.p_y_given_x)[T.arange(y.shape[0]), y])
 
-	def hinge_cost(self, y, delta=0.1, outputs=T.arange(26)):
+	def hinge_cost(self, y, delta=0.1, outputs=T.arange(2)):
 
 		c = self.p_y_given_x[T.arange(y.shape[0]), y]
 		p_y_given_x_temp = T.sort(self.p_y_given_x)
