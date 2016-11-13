@@ -1,5 +1,14 @@
 # CNN for classifying cat and dog images
 
+The code for this assignment can be found at 
+
+https://github.com/codingant007/deep-musings/tree/master/catsVsdogs
+
+The github repo contain README.md which contain instruction on how to run the code
+- train.py contains the architecture used to train the final model that generated the solution that is being submitted.
+- train2.py contains an architecture that I have experimented on.
+
+
 ##First attempt:
 
 CNN architechture:
